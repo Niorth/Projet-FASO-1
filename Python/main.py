@@ -2,6 +2,7 @@
 from gopigo import *
 import time,math
 from grovepi import *
+import os //pour PushBullet
 #main a recuperer sur le pc qui va appeler calculerRestantSopalin()
 
 def initialisation():
@@ -37,6 +38,7 @@ def ChangerCouleur(distance):
 		digitalWrite(ledOrange,1)
 		digitalWrite(ledRouge,0)
 	else:
+        os.system('../pushbullet.sh "Attention il vous reste plus beaucoup de papiers !"'
 		digitalWrite(ledVerte,0)
 		digitalWrite(ledOrange,0)
 		digitalWrite(ledRouge,1)
