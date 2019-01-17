@@ -1,67 +1,72 @@
-import sys
 
-sys.path.insert(0, './biblio_ext')
+
 from gopigo import *
-import time, math
-import requests
+import time,math
 from grovepi import *
-import os  # pour PushBullet
+import os #pour PushBullet
+#main a recuperer sur le pc qui va appeler calculerRestantSopalin()
 
-
-def DeroulerFeuille(coef):
-	from modules.Incnbfeuille import incrementerNombreFeuille
-	incrementerNombreFeuille()
-	fwd()
-	time.sleep(5)
-	stop()
-	time.sleep(4)
-	main()
+	
 
 def calculerRestantSopalin():
-    ultrasonic_ranger = 7
-    valeurCapteur = 1
-    try:
-        valeurCapteur = ultrasonicRead(ultrasonic_ranger)  # mettre notre fonction capteur
-    except TypeError:
-        print "Error"
-    distanceCapteurRouleau = 13  # valeur constante a calculer
-    from modules.ChangerCouleur import ChangerCouleur
-    ChangerCouleur(valeurCapteur)
-    print("----------")
-    print(valeurCapteur)
-    if (valeurCapteur < distanceCapteurRouleau):
-        print("peut derouler")
-        from modules.CalculerCoef import CalculerCoef
-        coef = CalculerCoef(valeurCapteur, distanceCapteurRouleau)
-        DeroulerFeuille(coef);
-	
-    else:
-        print("peut pas derouler")
-	from modules.EteindreProgramme import Eteindre_prog
-	Eteindre_prog()
-	main()
-	
+	while True:
+		ultrasonic_ranger = 4
+		valeurCapteur = 1
+		try:
+			valeurCapteur = ultrasonicRead(ultrasonic_ranger) #mettre notre fonction capteur
+		except TypeError:
+			print "Error"
+		
+		distanceCapteurRouleau = 30 #valeur constante a calculer
+		ChangerCouleur(valeurCapteur)
+		if(valeurCapteur < distanceCapteurRouleau):
+			print("peut derouler")
+			coef = CalculerCoef(valeurCapteur,distanceCapteurRouleau)
+			#DeroulerFeuille(coef);
+			ChangerCouleur(valeurCapteur)
+		else:
+			print("peut pas derouler")
 
-def main():
 
-    #try:
-       # ChangerCouleur(ultrasonicRead(7))
-    #except:
-    #    print("le systeme ne peut fonctionner")
-    capteur_main = 8
-    main = False
-    valeur = 11
-    while (main == False):
-       
-        try:
-            valeur = ultrasonicRead(capteur_main)
-        except:
-            print("error")
-	from modules.EstAllumer import est_allumer
-        if (valeur < 10 and est_allumer()):
-            print("main trouve")
-            main = True
-            calculerRestantSopalin()
+
+def ChangerCouleur(distance):
+	ledVerte= 2
+	ledRouge= 3
+	ledOrange= 4
+	distanceSopalinInit= 5#valeur rouleau plein
+	#print(distance)
+	pourcentageRestant=((distance)*100)/distanceSopalinInit
+	print pourcentageRestant
+	if(pourcentageRestant > 50):
+		digitalWrite(ledVerte,1)
+		digitalWrite(ledOrange,0)
+		digitalWrite(ledRouge,0)
 	
+	elif(pourcentageRestant > 10):
+		digitalWrite(ledVerte,0)
+		digitalWrite(ledOrange,1)
+		digitalWrite(ledRouge,0)
+	else:
+	        #os.system('../pushbullet.sh "Attention il vous reste plus beaucoup de papiers "')
+		digitalWrite(ledVerte,0)
+		digitalWrite(ledOrange,0)
+ 		digitalWrite(ledRouge,1)
 
-main()
+
+
+def CalculerCoef(valeurCapteur,distanceCapteurRouleau):
+	L = 1 #longeur d'une feuille
+	D = 1 #largeur d'un rouleur vide + (distanceCapteurRouleau - valeurCapteur)*2
+	perimetre = math.pi*D
+	return (L/perimetre)*360
+
+def DeroulerFeuille(coef):
+	
+	for i in range(coef):
+	
+		print i
+		time.sleep(.01)
+
+
+
+calculerRestantSopalin()
