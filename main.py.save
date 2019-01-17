@@ -1,9 +1,6 @@
 import sys
 
 sys.path.insert(0, './biblio_ext')
-import sys
-
-sys.path.insert(0, './biblio_ext')
 from gopigo import *
 import time, math
 import requests
@@ -14,11 +11,8 @@ import os  # pour PushBullet
 def DeroulerFeuille(coef):
 	from modules.Incnbfeuille import incrementerNombreFeuille
 	incrementerNombreFeuille()
-	tmpRotation = (coef*1.5)/360
-	print("---->")
-	print(tmpRotation)
 	fwd()
-	time.sleep(tmpRotation)
+	time.sleep(5)
 	stop()
 	time.sleep(4)
 	main()
@@ -27,10 +21,10 @@ def calculerRestantSopalin():
     ultrasonic_ranger = 7
     valeurCapteur = 1
     try:
-        valeurCapteur = float(ultrasonicRead(ultrasonic_ranger))  # mettre notre fonction capteur
+        valeurCapteur = ultrasonicRead(ultrasonic_ranger)  # mettre notre fonction capteur
     except TypeError:
         print "Error"
-    distanceCapteurRouleau = 12  # valeur constante a calculer
+    distanceCapteurRouleau = 13  # valeur constante a calculer
     from modules.ChangerCouleur import ChangerCouleur
     ChangerCouleur(valeurCapteur)
     print("----------")
@@ -39,9 +33,7 @@ def calculerRestantSopalin():
         print("peut derouler")
         from modules.CalculerCoef import CalculerCoef
         coef = CalculerCoef(valeurCapteur, distanceCapteurRouleau)
-        print("*************")
-	print(coef)
-	DeroulerFeuille(coef);
+        DeroulerFeuille(coef);
 	
     else:
         print("peut pas derouler")
@@ -66,7 +58,7 @@ def main():
         except:
             print("error")
 	from modules.EstAllumer import est_allumer
-        if (valeur < 5 and est_allumer()):
+        if (valeur < 10 and est_allumer()):
             print("main trouve")
             main = True
             calculerRestantSopalin()
