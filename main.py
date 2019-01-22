@@ -206,7 +206,8 @@ def init():
                 digitalWrite(ledOrange, 0)
                 digitalWrite(ledRouge, 0)
 		time.sleep(0.1)
-	    cptEssai = cptEssai + 1		    
+	    cptEssai = cptEssai + 1
+    valeurCapteur= 1		    
     if(sansInternet):
 	modeHorsLigne = True
     else:
@@ -221,18 +222,15 @@ def init():
                 digitalWrite(ledRouge, 0)
                 time.sleep(0.1)
 	valeurCapteur = 1
-	try:
-		valeurCapteur = float(ultrasonicRead(ultrasonic_ranger))
-	except TypeError:
-		print "Error"
-	print "------------------"
-	print valeurCapteur
-	print "------------------"
-	if(valeurCapteur >13):
-		if (modeHorsLigne == False):
-			from modules.EteindreProgramme import Eteindre_prog
-			Eteindre_prog()
-		cpt=10 #on met le compteur a 10 si la valeur est superieur a 13 (le rouleau n est pas present)
+    try:
+	valeurCapteur = float(ultrasonicRead(ultrasonic_ranger))
+    except TypeError:
+	print "Error"
+    if(valeurCapteur >13):
+	if (modeHorsLigne == False):
+	    from modules.EteindreProgramme import Eteindre_prog
+	    Eteindre_prog()
+	cpt=10 #on met le compteur a 10 si la valeur est superieur a 13 (le rouleau n est pas present)
     from modules.ChangerCouleur import ChangerCouleur
     ChangerCouleur(valeurCapteur,cpt) #on met 10 pour mettre automatiquement du rouge
     main()
